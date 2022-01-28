@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "347195380659",
+    "firebase_url": "https://gbipasarbaru-21f9c-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "gbipasarbaru-21f9c",
+    "storage_bucket": "gbipasarbaru-21f9c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347195380659:android:319505e7e03f6bfa2a31c6",
+        "android_client_info": {
+          "package_name": "com.absensigbipasarbaru"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "347195380659-manrqb60qbg32cv5k382j9pja7obqvq1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6kiLxQQrbVpN1AOWYthyFtYzvAaVXpc8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "347195380659-manrqb60qbg32cv5k382j9pja7obqvq1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "347195380659-p2o87p3lpe07jbv846pn0k2h5rmcq2r1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flix.gbipasarbaru"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
