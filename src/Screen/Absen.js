@@ -1,24 +1,29 @@
-import React, {useEffect, useState} from 'react';
+import firestore from '@react-native-firebase/firestore';
+import {useIsFocused} from '@react-navigation/native';
+import dayjs from 'dayjs';
+import React, {useContext, useEffect, useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Button,
   ActivityIndicator,
   Alert,
+  Button,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import Geolocation from 'react-native-geolocation-service';
+import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import {Camera, useCameraDevices} from 'react-native-vision-camera';
 import {BarcodeFormat, useScanBarcodes} from 'vision-camera-code-scanner';
-import dayjs from 'dayjs';
-import Geolocation from 'react-native-geolocation-service';
-import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import FlixButton from '../Component/FlixButton';
+import FlixToast from '../Component/FlixToast';
+import {AuthContext} from '../Provider/AuthProvider';
 
-export default App = () => {
-  const [name, setName] = useState('');
+export default Absen = props => {
+  const {logout} = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
   const [showCamera, setShowCamera] = useState(false);
   const [barcodeDetected, setBarcodeDetected] = useState(false);
+  const isFocus = useIsFocused();
 
   const [hasPermission, setHasPermission] = React.useState(false);
   const [hasLocationPermission, setHasLocationPermission] =
@@ -69,9 +74,10 @@ export default App = () => {
             firestore()
               .collection('Absen')
               .doc('List')
-              .collection(dayjs().format('DD-MM-YYY'))
-              .add({
-                name,
+              .collection(dayjs().format('DD-MM-YYYY'))
+              .doc(user.uid)
+              .set({
+                name: user.Name,
                 date: dayjs().valueOf(),
                 address: detailAddress?.title,
                 metadata: detailAddress?.address,
@@ -79,6 +85,10 @@ export default App = () => {
               .then(() => {
                 setBarcodeDetected(null);
                 setShowCamera(false);
+                FlixToast.show('Data berhasil disimpan', {status: 'success'});
+              })
+              .catch(e => {
+                FlixToast.show('Something went wrong', {status: 'danger'});
               });
           },
           error => {
@@ -107,27 +117,35 @@ export default App = () => {
   };
 
   const onPressCamera = async () => {
-    const dataUsers = await firestore()
-      .collection('Users')
-      .where('Name', '==', name)
+    const getDocID = await firestore()
+      .collection('Absen')
+      .doc('list')
+      .collection(dayjs().format('DD-MM-YYYY'))
+      .doc(user.uid)
       .get();
-    console.log('[Absen] dataUsers', dataUsers.size);
-    if (name && dataUsers) {
-      setBarcodeDetected(false);
-      setShowCamera(true);
-    } else {
-      if (!dataUsers) {
-        alert('Nama tidak ditemukan');
-      } else {
-        alert('Masukkan Nama');
-      }
+    if (getDocID.id === user.uid) {
+      return FlixToast.show('Kamu sudah melakukan scan hari ini', {
+        status: 'info',
+      });
     }
+    setBarcodeDetected(false);
+    setShowCamera(true);
   };
 
   return (
     <View style={S.containerSafeAreaView}>
       <View style={S.containerView}>
-        <TextInput value={name} placeholder="Nama" onChangeText={setName} />
+        <Text
+          style={{
+            fontSize: 20,
+            textAlign: 'center',
+            color: '#0056A1',
+            fontWeight: 'bold',
+            padding: 14,
+            borderRadius: 8,
+          }}>
+          Selamat Datang, {user?.Name}
+        </Text>
         {barcodeDetected ? (
           <ActivityIndicator
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
@@ -135,9 +153,9 @@ export default App = () => {
         ) : devices != null && hasPermission && showCamera ? (
           <>
             <Camera
-              style={{flex: 1}}
+              style={{flex: 1, marginVertical: 14}}
               device={devices}
-              isActive={!barcodeDetected}
+              isActive={!barcodeDetected || isFocus}
               frameProcessor={frameProcessor}
               frameProcessorFps={2}
             />
@@ -155,11 +173,30 @@ export default App = () => {
           </View>
         )}
       </View>
+      <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+        {user.isAdmin && (
+          <FlixButton
+            style={{flex: 1, marginHorizontal: 4}}
+            label="Show Records"
+            onPress={() => props.navigation.navigate('ListAbsen')}
+          />
+        )}
+        <FlixButton
+          style={{flex: 1, marginHorizontal: 4}}
+          label="Logout"
+          onPress={() =>
+            Alert.alert('Info', 'Yakin ingin keluar?', [
+              {text: 'Tidak'},
+              {text: 'Ya', onPress: () => logout()},
+            ])
+          }
+        />
+      </View>
     </View>
   );
 };
 
 const S = StyleSheet.create({
-  containerSafeAreaView: {flex: 1},
-  containerView: {flex: 1, padding: 14},
+  containerSafeAreaView: {flex: 1, padding: 14},
+  containerView: {flex: 1},
 });

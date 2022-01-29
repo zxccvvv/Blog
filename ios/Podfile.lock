@@ -355,6 +355,9 @@ PODS:
     - React-Core (= 0.66.4)
     - React-jsi (= 0.66.4)
     - ReactCommon/turbomodule/core (= 0.66.4)
+  - Firebase/Auth (8.11.0):
+    - Firebase/CoreOnly
+    - FirebaseAuth (~> 8.11.0)
   - Firebase/CoreOnly (8.11.0):
     - FirebaseCore (= 8.11.0)
   - Firebase/Database (8.11.0):
@@ -363,6 +366,11 @@ PODS:
   - Firebase/Firestore (8.11.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 8.11.0)
+  - FirebaseAuth (8.11.0):
+    - FirebaseCore (~> 8.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GTMSessionFetcher/Core (~> 1.5)
   - FirebaseCore (8.11.0):
     - FirebaseCoreDiagnostics (~> 8.0)
     - GoogleUtilities/Environment (~> 7.7)
@@ -471,10 +479,21 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.3.2)
     - "GoogleToolboxForMac/NSString+URLArguments (= 2.3.2)"
   - "GoogleToolboxForMac/NSString+URLArguments (2.3.2)"
+  - GoogleUtilities/AppDelegateSwizzler (7.7.0):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
   - GoogleUtilities/Environment (7.7.0):
     - PromisesObjC (< 3.0, >= 1.2)
   - GoogleUtilities/Logger (7.7.0):
     - GoogleUtilities/Environment
+  - GoogleUtilities/Network (7.7.0):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (7.7.0)"
+  - GoogleUtilities/Reachability (7.7.0):
+    - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
   - GoogleUtilitiesComponents (1.1.0):
@@ -750,6 +769,10 @@ PODS:
   - React-jsinspector (0.66.4)
   - React-logger (0.66.4):
     - glog
+  - react-native-geolocation-service (5.3.0-beta.4):
+    - React
+  - react-native-safe-area-context (3.3.2):
+    - React-Core
   - React-perflogger (0.66.4)
   - React-RCTActionSheet (0.66.4):
     - React-Core/RCTActionSheetHeaders (= 0.66.4)
@@ -815,9 +838,15 @@ PODS:
     - React-jsi (= 0.66.4)
     - React-logger (= 0.66.4)
     - React-perflogger (= 0.66.4)
+  - RNCAsyncStorage (1.15.17):
+    - React-Core
   - RNFBApp (14.3.0):
     - Firebase/CoreOnly (= 8.11.0)
     - React-Core
+  - RNFBAuth (14.3.0):
+    - Firebase/Auth (= 8.11.0)
+    - React-Core
+    - RNFBApp
   - RNFBDatabase (14.3.0):
     - Firebase/Database (= 8.11.0)
     - React-Core
@@ -826,6 +855,8 @@ PODS:
     - Firebase/Firestore (= 8.11.0)
     - React-Core
     - RNFBApp
+  - RNPermissions (3.2.0):
+    - React-Core
   - RNReanimated (2.2.4):
     - DoubleConversion
     - FBLazyVector
@@ -855,6 +886,9 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNScreens (3.10.2):
+    - React-Core
+    - React-RCTImage
   - vision-camera-code-scanner (0.1.6):
     - GoogleMLKit/BarcodeScanning
     - React-Core
@@ -910,6 +944,8 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
+  - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -922,10 +958,14 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
+  - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBDatabase (from `../node_modules/@react-native-firebase/database`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
+  - RNScreens (from `../node_modules/react-native-screens`)
   - vision-camera-code-scanner (from `../node_modules/vision-camera-code-scanner`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -936,6 +976,7 @@ SPEC REPOS:
     - BoringSSL-GRPC
     - CocoaAsyncSocket
     - Firebase
+    - FirebaseAuth
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseDatabase
@@ -1008,6 +1049,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-geolocation-service:
+    :path: "../node_modules/react-native-geolocation-service"
+  react-native-safe-area-context:
+    :path: "../node_modules/react-native-safe-area-context"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -1032,14 +1077,22 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
+  RNFBAuth:
+    :path: "../node_modules/@react-native-firebase/auth"
   RNFBDatabase:
     :path: "../node_modules/@react-native-firebase/database"
   RNFBFirestore:
     :path: "../node_modules/@react-native-firebase/firestore"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
+  RNScreens:
+    :path: "../node_modules/react-native-screens"
   vision-camera-code-scanner:
     :path: "../node_modules/vision-camera-code-scanner"
   VisionCamera:
@@ -1056,6 +1109,7 @@ SPEC CHECKSUMS:
   FBLazyVector: e5569e42a1c79ca00521846c223173a57aca1fe1
   FBReactNativeSpec: fe08c1cd7e2e205718d77ad14b34957cce949b58
   Firebase: 44dd9724c84df18b486639e874f31436eaa9a20c
+  FirebaseAuth: d96d73aba85d192d7a7aa0b86dd6d7f8ec170b4b
   FirebaseCore: 2f4f85b453cc8fea4bb2b37e370007d2bcafe3f0
   FirebaseCoreDiagnostics: 64d9709d804a6c25bd77841371c1fcfd909d5601
   FirebaseDatabase: ff9b4c7bee14d9f561f26c64a28ac083989f03d5
@@ -1103,6 +1157,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 94ce921e1d8ce7023366873ec371f3441383b396
   React-jsinspector: d0374f7509d407d2264168b6d0fad0b54e300b85
   React-logger: 933f80c97c633ee8965d609876848148e3fef438
+  react-native-geolocation-service: c0efb872258ed9240f1003a70fca9e9757e5c785
+  react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   React-perflogger: 93075d8931c32cd1fce8a98c15d2d5ccc4d891bd
   React-RCTActionSheet: 7d3041e6761b4f3044a37079ddcb156575fb6d89
   React-RCTAnimation: 743e88b55ac62511ae5c2e22803d4f503f2a3a13
@@ -1115,10 +1171,14 @@ SPEC CHECKSUMS:
   React-RCTVibration: e3ffca672dd3772536cb844274094b0e2c31b187
   React-runtimeexecutor: dec32ee6f2e2a26e13e58152271535fadff5455a
   ReactCommon: 57b69f6383eafcbd7da625bfa6003810332313c4
+  RNCAsyncStorage: 6bd5a7ba3dde1c3facba418aa273f449bdc5437a
   RNFBApp: 16bdf8b75b84631513da3d5f5e2520a436ec9b29
+  RNFBAuth: 7eb50d60c82b4a59018b0c7a1d4afdd1250eff74
   RNFBDatabase: 225f0ac57d2aedfec3221d8751b49670bc779b16
   RNFBFirestore: 431b62b5751a8131d099cf2d094e16facaea455f
+  RNPermissions: f7ebe52db07c00901127966ca080b4ec6a6ceb0a
   RNReanimated: 65583befd5706cc9c86ae9a081786181ced37b93
+  RNScreens: d6da2b9e29cf523832c2542f47bf1287318b1868
   vision-camera-code-scanner: 75a4ac3c9ce9b4605f5d87cc0f0001bb64bfb4de
   VisionCamera: e3f4eea37f32f9a2ab40ce560940174a5258abaf
   Yoga: e7dc4e71caba6472ff48ad7d234389b91dadc280
