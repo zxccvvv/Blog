@@ -76,10 +76,11 @@ export default FlixButton = ({
 };
 
 const styles = StyleSheet.create({
-  containerView: {borderRadius: 6, marginVertical: 8},
+  containerView: {borderRadius: 6, elevation: 4},
   label: {
-    padding: 8,
-    fontSize: 14,
+    margin: 8,
+    fontWeight: '500',
+    fontSize: 16,
     textAlign: 'center',
   },
 });

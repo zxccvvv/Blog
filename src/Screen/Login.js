@@ -1,4 +1,3 @@
-import firestore from '@react-native-firebase/firestore';
 import React, {useContext, useState} from 'react';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -8,16 +7,6 @@ export default Login = props => {
   const {login} = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const onPressLogin = async () => {
-    const emailFound = await firestore()
-      .collection('Users')
-      .where('email', '==', email)
-      .get();
-    if (emailFound.size !== 0) {
-      login(email, password);
-    }
-  };
 
   return (
     <SafeAreaView style={S.containerSafeAreaView}>

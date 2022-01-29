@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  FlatList,
-} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import dayjs from 'dayjs';
+import React, {useEffect, useState} from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import FlixButton from '../Component/FlixButton';
 
 export default ListAbsen = props => {
   const [loading, setLoading] = useState(true);
@@ -16,18 +17,17 @@ export default ListAbsen = props => {
   useEffect(() => {
     const subscriber = getData();
 
-    // Unsubscribe from events when no longer in use
     return () => subscriber();
   }, []);
 
   const getData = () => {
-    firestore()
+    return firestore()
       .collection('Absen')
       .doc('List')
-      .collection(dayjs().format('DD-MM-YYY'))
+      .collection(dayjs().format('DD-MM-YYYY'))
       .onSnapshot(querySnapshot => {
         const tempUsers = [];
-        querySnapshot.forEach(async documentSnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
           console.log('[ListAbsen] data', documentSnapshot.data());
           tempUsers.push({
             ...documentSnapshot.data(),
@@ -45,19 +45,20 @@ export default ListAbsen = props => {
   }
 
   const renderItem = ({item, index}) => (
-    <View
+    <FlixButton
+      onPress={() => alert(JSON.stringify(item, null, 2))}
       style={{
         flex: 1,
         padding: 8,
-        backgroundColor: index % 2 == 0 ? '#CACACA' : '#FFFFFF',
+        marginVertical: 0,
+        backgroundColor: index % 2 === 0 ? '#CACACA' : '#FFFFFF',
       }}>
       <Text>Name: {item.name}</Text>
       <Text>
         {'Date: ' + dayjs(item.date).locale('id').format('DD MMMM YYYY hh:mm')}
       </Text>
       <Text>Address: {item.address}</Text>
-      <Text>Metadata: {JSON.stringify(item.metadata, null, 2)}</Text>
-    </View>
+    </FlixButton>
   );
 
   return (

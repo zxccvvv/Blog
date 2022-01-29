@@ -1,7 +1,7 @@
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import React, {createContext, useState} from 'react';
 import FlixToast from '../Component/FlixToast';
+import {FirestoreTimestamp, update} from '../Helper.js/FirestoreHelper';
 
 export const AuthContext = createContext({});
 
@@ -44,15 +44,11 @@ export const AuthProvider = ({children}) => {
         password,
       );
       userCredential.user.sendEmailVerification();
-      await firestore()
-        .collection('UsersLogin')
-        .doc(userCredential.user.uid)
-        .set({
-          ...docDetail.data(),
-          email,
-          createdAt: firestore.FieldValue.serverTimestamp(),
-        });
-      // await firestore().collection('Users').doc(docDetail.id).delete();
+      await update('Users', docDetail.id, {
+        email,
+        createdAt: FirestoreTimestamp,
+        uid: userCredential.user.uid,
+      });
       await logout();
     } catch (e) {
       console.log('[AuthProvider] JSON.stringify(e);', JSON.stringify(e.code));

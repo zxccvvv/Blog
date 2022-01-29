@@ -1,4 +1,3 @@
-import firestore from '@react-native-firebase/firestore';
 import React, {useContext, useRef, useState} from 'react';
 import {
   ActivityIndicator,
@@ -11,6 +10,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import FlixToast from '../Component/FlixToast';
+import {findOne} from '../Helper.js/FirestoreHelper';
 import {AuthContext} from '../Provider/AuthProvider';
 
 export default ValidateLogin = props => {
@@ -26,11 +26,20 @@ export default ValidateLogin = props => {
 
   const onCheckName = async () => {
     setIsProcess(true);
-    const dataUsers = await firestore()
-      .collection('Users')
-      .where('Name', '==', name)
-      .get();
+    const dataUsers = await findOne('Users', {
+      key: 'Name',
+      comparation: '==',
+      value: name,
+    });
     if (dataUsers.size === 1) {
+      const isEmailExist = dataUsers?.email;
+      if (isEmailExist) {
+        setIsProcess(false);
+        return FlixToast.show(
+          'Nama ini sudah dikaitkan dengan email: ' + isEmailExist,
+          {status: 'warning'},
+        );
+      }
       dataUsers.forEach(doc => (docDetail.current = doc));
       setIsProcess(false);
       setShowRegister(true);

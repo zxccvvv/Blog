@@ -1,11 +1,11 @@
-import firestore from '@react-native-firebase/firestore';
 import {useIsFocused} from '@react-navigation/native';
 import dayjs from 'dayjs';
 import React, {useContext, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Button,
+  Dimensions,
+  Image,
   StyleSheet,
   Text,
   View,
@@ -16,7 +16,10 @@ import {Camera, useCameraDevices} from 'react-native-vision-camera';
 import {BarcodeFormat, useScanBarcodes} from 'vision-camera-code-scanner';
 import FlixButton from '../Component/FlixButton';
 import FlixToast from '../Component/FlixToast';
+import {addAbsen, isUserAlreadyAttandance} from '../Helper.js/FirestoreHelper';
 import {AuthContext} from '../Provider/AuthProvider';
+
+const {width, height} = Dimensions.get('window');
 
 export default Absen = props => {
   const {logout} = useContext(AuthContext);
@@ -71,17 +74,12 @@ export default Absen = props => {
               position.coords.latitude,
               position.coords.longitude,
             );
-            firestore()
-              .collection('Absen')
-              .doc('List')
-              .collection(dayjs().format('DD-MM-YYYY'))
-              .doc(user.uid)
-              .set({
-                name: user.Name,
-                date: dayjs().valueOf(),
-                address: detailAddress?.title,
-                metadata: detailAddress?.address,
-              })
+            addAbsen(user.uid, {
+              name: user.Name,
+              date: dayjs().valueOf(),
+              address: detailAddress?.title,
+              metadata: detailAddress?.address,
+            })
               .then(() => {
                 setBarcodeDetected(null);
                 setShowCamera(false);
@@ -117,13 +115,9 @@ export default Absen = props => {
   };
 
   const onPressCamera = async () => {
-    const getDocID = await firestore()
-      .collection('Absen')
-      .doc('list')
-      .collection(dayjs().format('DD-MM-YYYY'))
-      .doc(user.uid)
-      .get();
-    if (getDocID.id === user.uid) {
+    const isExist = await isUserAlreadyAttandance(user.uid);
+    console.log('[Absen] getDocID.exists', isExist);
+    if (isExist) {
       return FlixToast.show('Kamu sudah melakukan scan hari ini', {
         status: 'info',
       });
@@ -168,13 +162,25 @@ export default Absen = props => {
           </>
         ) : (
           <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Button title="Scan disini" onPress={() => onPressCamera()} />
+            style={{
+              flex: 1,
+              justifyContent: 'space-around',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={require('../Images/logoGBI.png')}
+              style={{
+                width: width * 0.6,
+                height: width * 0.6,
+                resizeMode: 'contain',
+              }}
+            />
+            <FlixButton label="Scan disini" onPress={() => onPressCamera()} />
           </View>
         )}
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-        {user.isAdmin && (
+        {user?.isAdmin && (
           <FlixButton
             style={{flex: 1, marginHorizontal: 4}}
             label="Show Records"
